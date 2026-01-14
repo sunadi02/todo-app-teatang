@@ -3,9 +3,12 @@ import { Pool } from "pg";
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === "production" ? {
+  ssl: {
     rejectUnauthorized: false
-  } : false
+  },
+  max: 20,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 10000,
 });
 
 export const auth = betterAuth({
@@ -41,7 +44,8 @@ export const auth = betterAuth({
   },
   
   trustedOrigins: [
-    process.env.BETTER_AUTH_URL || "http://localhost:3000"
+    process.env.BETTER_AUTH_URL || "http://localhost:3000",
+    "https://todo-app-teatang.vercel.app"
   ]
 });
 
